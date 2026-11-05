@@ -15,6 +15,11 @@ approximation. Computation still uses floating-point arithmetic and tolerances.
 General intersections, fitting, offsets, and sweeps can involve approximation;
 they should not be understood as universally exact symbolic constructions.
 
+For subsystem theory, source walkthroughs, diagrams, and practical workflows,
+see the [subsystem handbook index](README.md). It links the detailed guides for
+topology, evaluation, solvers, intersections, queries, projection, sections,
+booleans, fillets, tessellation, construction, repair, runtime, and interchange.
+
 ## 1. Features
 
 | Area | Capabilities | Typical CAD purpose |
