@@ -13,7 +13,7 @@ BASELINE = "3fd5b9548d19aa8c12c29bc9637a96d42a06f8a5"
 GUIDES = """
 topology geometry tolerances evaluation spatial-indexing solvers
 intersections queries projection-trimming sections booleans
-fillets-chamfers-blends tessellation silhouettes-visibility
+blend tessellation silhouettes-visibility
 primitives-sweeps lofts-patches offsets-shells healing-stitching editing
 deformation runtime validation-diagnostics polygon-brep assemblies-attributes
 native-io usd-interchange local-operations

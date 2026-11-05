@@ -193,4 +193,4 @@ Use analytic lines/circles for known answers, then add multiple minima, boundary
 solutions, periodic seams and tangency. Compare geometric residuals rather than
 only parameter values. This guide documents the machinery; the dedicated
 [queries](queries.md), [intersections](intersections.md), and
-[fillet](fillets-chamfers-blends.md) chapters explain how their callers use it.
+[fillet](blend.md) chapters explain how their callers use it.

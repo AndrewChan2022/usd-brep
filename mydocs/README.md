@@ -44,7 +44,7 @@ design suggestions are distinguished from observed implementation behavior.
 | Guide | What it explains |
 | --- | --- |
 | [Booleans](booleans.md) | Intersection insertion, classification, selection, reconstruction and consumption |
-| [Fillets, chamfers and blends](fillets-chamfers-blends.md) | Contact geometry, sizing policies, corners, continuity and removal |
+| [Fillets, chamfers and blends](blend.md) | Contact geometry, sizing policies, corners, continuity and removal |
 | [Tessellation](tessellation.md) | Boundary sampling, face meshing, error controls and partial-output diagnostics |
 | [Silhouettes and visibility](silhouettes-visibility.md) | View-dependent curves, tracing, hidden curves and picking |
 
@@ -98,7 +98,7 @@ uv run --no-project --with numpy --with matplotlib python mydocs/assets/handbook
 The [generator](assets/handbook/generate_figures.py) checks analytic invariants
 for the plotted examples. The existing NURBS/fitting assets keep their own generators.
 
-The [worked 3D fillet examples](fillets-chamfers-blends.md#8-worked-3d-examples)
+The [worked 3D fillet examples](blend.md#8-worked-3d-examples)
 add two illustrations: a block before/after rounding one edge and three fillets
 meeting at a corner patch. Their [separate generator](assets/fillets/generate_figures.py)
 checks the analytic geometry; these illustrations are not kernel execution results.

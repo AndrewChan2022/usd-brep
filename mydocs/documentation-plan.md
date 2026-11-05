@@ -90,7 +90,7 @@ documents. Baseline numbers identify entries; the insertion schedule in Section
 | Order / file | Detailed scope | Required illustrations and examples |
 | --- | --- | --- |
 | 8. `booleans.md` | Set and regularized-solid theory where applicable; union/intersection/difference; candidate pairs, intersection insertion, relationship/classification, selection and assembly; coincident/tangent cases; manifold/non-manifold dispatch; operand consumption and failure state | Region selection truth table; before/split/classify/after sequence; call graph; plate with cutter, containment and touching cases |
-| 9. `fillets-chamfers-blends.md` | Distinguish the three operations; rolling-ball/offset/contact theory where applicable; continuity and cross-section choices; constant/variable radii; spine, trimming, corners and patches; blend creation versus edge replacement; removal; feasibility and failure diagnosis | Radius/contact construction; chamfer distances; G0/G1/G2 comparison; multi-edge corner; actual executive/solver workflow; bracket example |
+| 9. `blend.md` | Distinguish the three operations; rolling-ball/offset/contact theory where applicable; continuity and cross-section choices; constant/variable radii; spine, trimming, corners and patches; blend creation versus edge replacement; removal; feasibility and failure diagnosis | Radius/contact construction; chamfer distances; G0/G1/G2 comparison; multi-edge corner; actual executive/solver workflow; bracket example |
 | 10. `tessellation.md` | Curve sampling; face-domain meshing; trim constraints; shared-edge consistency; seams/poles; chord and angular controls; triangle quality; normal handling; PolyBrep output and ownership; preview versus final display | Chord-error diagram; UV mesh mapped to a face; shared-edge crack example; quality comparison; C++ BRep-to-mesh workflow |
 
 Milestone: all explicitly requested subject areas have detailed coverage, with
@@ -356,7 +356,7 @@ published in commit `871b86e`.
 | [projection-trimming.md](projection-trimming.md) | Drop/trim/lift temporary outputs; UV seams and trim-region construction | Source workflow | `05a0f0f` |
 | [sections.md](sections.md) | Plane section append policy; cut half-space; contour nesting and caps | Source workflow | `ce80ff5` |
 | [booleans.md](booleans.md) | Manifold dispatch; provisional intersection/resolve/imprint/relate stages; consumption | Existing native example + workflow | `9fadde4` |
-| [fillets-chamfers-blends.md](fillets-chamfers-blends.md) | Chamfer/circular/selected-edge paths; blend insertion; removal fallback and partial mutation | Source workflows | `6bc3881` |
+| [blend.md](blend.md) | Chamfer/circular/selected-edge paths; blend insertion; removal fallback and partial mutation | Source workflows | `6bc3881` |
 | [tessellation.md](tessellation.md) | Parameter struct; BRep conversion; shared edges; partial-result diagnostics | C++ fragment | `788efba` |
 | [silhouettes-visibility.md](silhouettes-visibility.md) | HCR wrapper; ignored plane-point input; output copying; ray/visibility concepts | Source workflow | `ec952de` |
 | [primitives-sweeps.md](primitives-sweeps.md) | Linear/rotational/draft/pipe wrappers; profile copying; caps and frames | C++ fragment | `15b2b5c` |

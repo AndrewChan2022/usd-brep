@@ -39,7 +39,7 @@ recognition, or a complete direct-modeling constraint system.
 | [Rigid transform](editing.md) | Moves the entire selected object without solving new internal boundary intersections |
 | [Offset/shell](offsets-shells.md) | Constructs geometry from normal distances and opening choices; shares reconstruction machinery with LOP |
 | [Boolean](booleans.md) | Combines material regions of operands and classifies their boundary fragments |
-| [Fillet/chamfer](fillets-chamfers-blends.md) | Constructs transition faces with contact/radius constraints |
+| [Fillet/chamfer](blend.md) | Constructs transition faces with contact/radius constraints |
 | [Feature removal](editing.md) | Removes a face set and reconstructs the remaining boundary through a separate feature executive |
 | [NURBS editing](nurbs.md) | Changes spline representation or coefficients; surrounding BRep consistency is a separate responsibility |
 

@@ -170,7 +170,7 @@ data when experimenting with repair or feasibility options.
 ## 8. Related algorithms and verification scope
 
 Use [intersections](intersections.md) for trimming displaced supports,
-[fillets](fillets-chamfers-blends.md) for transition geometry,
+[fillets](blend.md) for transition geometry,
 [tolerances](tolerances.md) for approximation budgets, and
 [healing/stitching](healing-stitching.md) for post-construction diagnostics.
 This source walkthrough does not claim every arbitrary distance is feasible or

@@ -199,5 +199,5 @@ such and compared against the original.
 
 The relevant reading order is public contract → `SmMerge` dispatch →
 `IntersectInsertRelate` → classification/reconstruction → ownership cleanup.
-Continue with [fillets](fillets-chamfers-blends.md), [tolerances](tolerances.md),
+Continue with [fillets](blend.md), [tolerances](tolerances.md),
 and [validation](validation-diagnostics.md).
