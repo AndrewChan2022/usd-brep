@@ -121,6 +121,10 @@ geometric agreement.
 
 ## 5. Euler-style edits and their limits
 
+For the full theory, classical-to-kernel method map, source walkthroughs, and
+before/after diagrams, see [Euler operations](euler.md). This section gives a
+short introduction within the topology representation guide.
+
 For a connected, closed, orientable surface represented by a suitable cell
 decomposition,
 

@@ -16,7 +16,7 @@ intersections queries projection-trimming sections booleans
 blend tessellation silhouettes-visibility
 primitives-sweeps lofts-patches offsets-shells healing-stitching editing
 deformation runtime validation-diagnostics polygon-brep assemblies-attributes
-native-io usd-interchange local-operations
+native-io usd-interchange local-operations euler
 """.split()
 
 
@@ -84,6 +84,11 @@ def main():
     if len(local_svg_files) != 1:
         errors.append(f"Expected one local-operation SVG; found {len(local_svg_files)}")
     svg_files.extend(local_svg_files)
+    euler_figures = DOCS / "assets" / "euler"
+    euler_svg_files = sorted(euler_figures.glob("*.svg"))
+    if len(euler_svg_files) != 1:
+        errors.append(f"Expected one Euler-operation SVG; found {len(euler_svg_files)}")
+    svg_files.extend(euler_svg_files)
     for path in svg_files:
         try:
             root = ET.parse(path).getroot()
@@ -104,6 +109,7 @@ def main():
             errors.append(f"{path.name}: missing/invalid PNG alternative")
     for path in [figures / "generate_figures.py", fillet_figures / "generate_figures.py",
                  local_figures / "generate_figures.py",
+                 euler_figures / "generate_figures.py",
                  Path(__file__).resolve()]:
         ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     if errors:

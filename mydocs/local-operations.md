@@ -14,6 +14,10 @@ changing a cylindrical hole radius, or replacing a free-form support surface.
 The difficult part is reconstructing the edges, vertices, and trimmed regions
 that make the changed boundary a valid solid.
 
+[Euler operations](euler.md) explain the lower-level connectivity edits used
+in boundary reconstruction, including edge subdivision, face splitting, and
+loop joining. They complement the surface-replacement workflow described here.
+
 SMLib has an explicit kernel entry point in
 [SmBrep.h](../source/SMLib/inc/SmBrep.h):
 

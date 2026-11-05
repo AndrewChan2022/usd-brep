@@ -24,9 +24,10 @@ below preserves the agreed scope; the delivery record at the end states the
 reviewed paths, example validation, limitations, and commits. Source review is
 not a full runtime audit of every branch of every subsystem.
 
-The later [local-operations chapter](local-operations.md) adds explicit LOP
-coverage, bringing the handbook to 27 subsystem guides. The original 26-guide
-roadmap and delivery ledger below retain their historical scope.
+The later [local-operations chapter](local-operations.md) and
+[Euler-operations chapter](euler.md) bring the handbook to 28 subsystem guides.
+The original 26-guide roadmap and delivery ledger below retain their
+historical scope.
 
 Interpretation of the requested names: `bool` means solid BRep booleans, `iset`
 means intersections, `eval` means geometric evaluation, `section` means planar
@@ -456,3 +457,26 @@ filled surfaces use raster layers and contain no individual 3D polygon paths.
 The checker now includes the new SVG/PNG pair and generator. Native call fragments
 remain source-reviewed, not compiled or executed; the figure is not evidence of
 a successful SMLib local-operation run. No kernel code was changed.
+
+### Follow-up: Euler operations
+
+Added [euler.md](euler.md) as the 28th subsystem guide. It covers Euler
+characteristic with explicit loop/boundary counting conventions, classical
+make/kill pairs, their relationship to the SMLib radial-use representation,
+and the actual kernel methods. Source walkthroughs cover wire construction,
+edge subdivision, face insertion, loop bridging, compatible face joining,
+and removal of intermediate vertices. A box-face imprint gives expected
+entity counts, areas, and unchanged volume.
+
+The new SVG/PNG schematic compares three edits before and after, including
+the two opposite uses of a ring bridge. The generator checks its count
+arithmetic and the imprint sequence; these checks are not kernel executions.
+The guide records endpoint-error outputs, partial-mutation/ownership limits,
+periodic-seam exceptions, and the need for independent validation. Native
+fragments remain source-reviewed rather than compiled or executed.
+
+Validation for this follow-up: documentation checks passed for 28 guides;
+60 Mermaid diagrams parsed and 513 LaTeX expressions rendered without errors.
+The two new Mermaid diagrams and the Euler SVG were rendered in Chrome and
+visually inspected. The new schematic's count assertions passed. No native
+kernel tests or topology edits were executed as part of this documentation work.

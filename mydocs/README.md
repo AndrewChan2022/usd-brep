@@ -2,7 +2,7 @@
 
 This handbook explains the geometry, algorithms, implementation paths, and C++
 integration concerns behind SMLib. Start with the overview, then follow the
-foundation chapters before studying modeling operations. The 27 subsystem
+foundation chapters before studying modeling operations. The 28 subsystem
 chapters supplement the existing NURBS and fitting guides.
 
 The source baseline for the new chapters is upstream
@@ -24,6 +24,7 @@ design suggestions are distinguished from observed implementation behavior.
 | Guide | What it explains |
 | --- | --- |
 | [Topology](topology.md) | Entities, oriented uses, regions, seams, Euler-style edits, traversal |
+| [Euler operations](euler.md) | Classical operators, incidence edits, edge/face splitting, loop bridging, inverse operations and validation |
 | [Geometry](geometry.md) | Analytic, spline and procedural representations; domains and placements |
 | [Tolerances](tolerances.md) | Scale, conditioning, error measures, effective tolerances |
 | [Evaluation](evaluation.md) | Points, derivatives, normals, curvature, STEP parameter conventions |
@@ -79,6 +80,7 @@ design suggestions are distinguished from observed implementation behavior.
 - **Measure clearance:** evaluation → solvers → queries; distinguish boundary distance from solid overlap.
 - **Integrate into a C++ CAD application:** runtime → assemblies/attributes → editing → validation → tessellation.
 - **Implement a direct face edit:** topology → projection/trimming → local operations → validation → editing.
+- **Understand boundary reconstruction:** topology → Euler operations → intersections → booleans.
 
 Qt UI, sketch constraints, parametric regeneration, persistent naming, and an
 application document/undo model remain separate application architecture topics.
@@ -114,6 +116,15 @@ geometry and volumes; these are analytic references rather than kernel results.
 
 ```powershell
 uv run --no-project --with numpy --with matplotlib python mydocs/assets/local-operations/generate_figures.py
+```
+
+The [Euler-operation guide](euler.md) adds before/after schematics for edge
+subdivision, face splitting, and ring bridging. Its
+[generator](assets/euler/generate_figures.py) verifies the illustrated entity
+counts and the box-imprint accounting:
+
+```powershell
+uv run --no-project --with matplotlib python mydocs/assets/euler/generate_figures.py
 ```
 
 Native C++ fragments in the new guides were reviewed against this checkout's
