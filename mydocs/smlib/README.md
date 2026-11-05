@@ -12,8 +12,7 @@ mydocs/smlib/
 ├── README.md               # Index and reading paths
 ├── modules/                # Overview, architecture, and topic guides
 ├── assets/                 # Shared figures and their generators
-├── tools/                  # Documentation validation scripts
-└── documentation-plan.md   # Scope and delivery record
+└── tools/                  # Documentation validation scripts
 ```
 
 Commands below run from the repository root. Module links point into `modules/`;
@@ -154,9 +153,6 @@ baselines, and figure files with:
 ```powershell
 uv run --no-project python mydocs/smlib/tools/check_docs.py
 ```
-
-The [documentation plan](documentation-plan.md) records scope, review criteria,
-coverage boundaries, and publication progress.
 
 For Mermaid parsing and LaTeX rendering checks, install JavaScript dependencies
 in a temporary directory, then use the additional checker:
