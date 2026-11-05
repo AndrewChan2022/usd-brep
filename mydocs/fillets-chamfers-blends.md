@@ -4,6 +4,9 @@ Source baseline: upstream `3fd5b9548d19aa8c12c29bc9637a96d42a06f8a5`.
 This chapter distinguishes construction theory, actual executive roles, and
 application workflows. No new native fillet example was executed here.
 
+For a concrete solid-model example, jump to
+[the worked 3D fillet and corner examples](#8-worked-3d-examples).
+
 ## 1. Three operations sharing a transition problem
 
 A fillet commonly inserts a rounded transition with a circular cross-section.
@@ -202,7 +205,242 @@ verify tangency and material side, then add the connected corner network. This
 sequence is diagnostic; the final model should still use the intended design
 radius and edge set rather than silently reduced settings.
 
-## 8. Verification and failure localization
+## 8. Worked 3D examples
+
+### 8.1 Round one edge of a rectangular block
+
+Take a block of length $L=20$, width $W=12$, and height $H=8$, with its minimum
+corner at the origin. Use consistent model length units throughout. Select only
+the top-front edge, from $(0,0,8)$ to $(20,0,8)$, and apply a circular fillet of
+radius $r=2$.
+
+![A 3D block before and after rounding one full-length edge](assets/fillets/single_edge_3d.svg)
+
+Orange marks the selected sharp edge on the left and the new **surface** on the
+right. These are analytic illustrations of the intended geometry, not screenshots
+of an executed SMLib operation. [PNG alternative](assets/fillets/single_edge_3d.png).
+
+The two adjacent supports are the front plane $y=0$ and top plane $z=H$.
+In each YZ cross-section, replace the sharp corner with a quarter-circle centered
+at $(r,H-r)=(2,6)$. Extending that section along X produces a quarter-cylinder:
+
+$$
+\mathbf S(x,\theta)=
+\begin{bmatrix}
+x\\r-r\cos\theta\\H-r+r\sin\theta
+\end{bmatrix},\qquad
+0\leq x\leq L,\quad0\leq\theta\leq\frac\pi2.
+$$
+
+The surface has two contact rails and a center spine:
+
+| Curve | Position | Meaning |
+| --- | --- | --- |
+| Front contact rail | $(x,0,6)$ | Fillet meets the trimmed front face |
+| Top contact rail | $(x,2,8)$ | Fillet meets the trimmed top face |
+| Center spine | $(x,2,6)$ | Centers of the rolling radius-2 ball/section circles |
+
+The spine lies inside the solid; it is construction geometry, not a new visible
+boundary edge. A 2D fillet constructs the section arc. This **3D edge fillet**
+constructs a surface, trims its neighboring faces, changes the two end-face
+boundaries, and reconnects the solid's topology.
+
+The outward normal on the cylindrical patch is
+
+$$
+\mathbf n=(0,-\cos\theta,\sin\theta).
+$$
+
+At $\theta=0$ it is the front-face normal $(0,-1,0)$; at $\theta=\pi/2$ it is
+the top-face normal $(0,0,1)$. The joins are tangent-continuous. Curvature across
+the circular section changes from zero on either plane to magnitude $1/r$ on
+the cylinder, so this ordinary circular fillet is generally $G^1$, not $G^2$.
+
+### 8.2 Its NURBS representation
+
+This special case has an exact rational tensor-product representation. At each
+of $x=0$ and $x=L$, use the three YZ control points
+
+$$
+\mathbf P_0=(0,H-r),\qquad
+\mathbf P_1=(0,H),\qquad
+\mathbf P_2=(r,H),
+$$
+
+with weights $(1,1/\sqrt2,1)$. Two copies of that control row, one at each X end,
+give a $2\times3$ control net. The degrees are 1 along the edge and 2 across the
+arc; corresponding clamped knot vectors are $(0,0,1,1)$ and $(0,0,0,1,1,1)$.
+
+The middle control point lies at the old sharp corner, but the rational curve
+does not pass through it. Also, the spline parameter across the arc is not
+linear in $\theta$. This construction explains the exact geometry available in
+this planar case; it does not claim that every SMLib fillet branch stores this
+particular control net or retains one unsplit face.
+
+### 8.3 Native C++ workflow for the selected edge
+
+The following helper creates a fresh body, finds the edge passing through
+$(10,0,8)$, fillets it, and checks manifold status and expected volume. Selecting
+by a known interior point avoids depending on the order returned by `GetEdges`.
+The point test is specific to this simple box; an arbitrary model needs a more
+complete selection policy.
+
+This is a source-reviewed C++ usage example, **not a compiled or executed result**.
+Use the include/link setup in the [native example README](../Examples/SM_API/README.md).
+
+```cpp
+#include <SmApiBrep.h>
+#include <SmApiGeneral.h>
+#include <SmApiPrimitives.h>
+#include <SmApiQueries.h>
+#include <SmBrep.h>
+#include <SmVector3d.h>
+
+#include <cmath>
+#include <memory>
+#include <stdexcept>
+
+void CheckFilletStatus(SmApiStatus status, const char* operation)
+{
+    if (status != SM_SUCCESS)
+    {
+        throw std::runtime_error(operation);
+    }
+}
+
+std::unique_ptr<SmBrep> MakeSingleEdgeFillet()
+{
+    // Initialize before dispatching work; general SM_API calls are serialized.
+    SmApiCreateContext();
+    SmBrep* raw = nullptr;
+    SmApiStatus status = SmApiCreateBox(
+        SmVector3d(0.0, 0.0, 0.0), 20.0, 12.0, 8.0, raw);
+    std::unique_ptr<SmBrep> body(raw);
+    CheckFilletStatus(status, "CreateBox failed");
+
+    SmTArray<SmEdge*> edges;
+    SmTArray<SmEdge*> selected;
+    CheckFilletStatus(SmApiGetEdges(body.get(), edges), "GetEdges failed");
+    const SmPoint3d probe(10.0, 0.0, 8.0);
+    for (ULONG i = 0; i < edges.GetSize(); ++i)
+    {
+        SmPoint3d closest;
+        double parameter = 0.0;
+        double distance = 0.0;
+        CheckFilletStatus(SmApiEdgeClosestPoint(
+            edges[i], probe, closest, parameter, distance), "Edge query failed");
+        if (distance <= 1.0e-5)
+        {
+            selected.Add(edges[i]);
+        }
+    }
+    if (selected.GetSize() != 1)
+    {
+        throw std::runtime_error("Expected exactly one top-front edge");
+    }
+
+    // Radius 2; circular section; G1 setting; default blend thumbweight.
+    CheckFilletStatus(SmApiFilletEdges(
+        body.get(), selected, 2.0, 1, 1, 1.0), "FilletEdges failed");
+    // These are borrowed pointers; discard them after topology mutation.
+    selected.ReSet();
+    edges.ReSet();
+
+    SmBoolean manifold = FALSE;
+    CheckFilletStatus(SmApiBrepIsManifoldSolid(
+        body.get(), manifold), "Manifold query failed");
+    double volume = 0.0;
+    CheckFilletStatus(SmApiBrepComputeVolume(
+        body.get(), 1.0e-6, volume), "Volume query failed");
+    const double pi = std::acos(-1.0);
+    const double expectedVolume = 1920.0 - 20.0 * 4.0 * (1.0 - pi / 4.0);
+    if (!manifold || std::abs(volume - expectedVolume) > 1.0e-3)
+    {
+        throw std::runtime_error("Fillet result failed the example checks");
+    }
+    return body;
+}
+```
+
+The radius and acceptance thresholds are for this fixture, not universal
+defaults. The wrapper mutates the owned body. On any thrown failure the local
+owner destroys that working body; this helper never retries partially modified
+geometry. On success the caller owns the returned solid and must retain its
+context through destruction. There is no ownership transfer of selected edges
+to the application, and old edge pointers must not be used after the fillet.
+
+For display, pass the returned solid to `SmApiTessellate` as described in
+[tessellation.md](tessellation.md). A Qt viewport draws the resulting mesh;
+the fillet construction itself does not depend on Qt.
+
+### 8.4 Independent expected results
+
+The ideal removed YZ area is a square minus a quarter-disk. Therefore
+
+$$
+\Delta V=Lr^2\left(1-\frac\pi4\right),\qquad
+V_{\rm result}=LWH-\Delta V\approx1902.831853072.
+$$
+
+The block's overall extrema remain $(0,0,0)$ and $(20,12,8)$. At $x=10$, the
+new boundary should follow the quarter-circle centered at $(y,z)=(2,6)$ with
+radius 2; its two contacts are $(10,0,6)$ and $(10,2,8)$.
+Check these section points, face normals at the rails, closure at both ends,
+and material validity. Volume plus manifold status is a useful initial check,
+not a complete proof of local surface accuracy. Avoid a fixed face-count test:
+equivalent geometry can be represented with different partitions.
+
+### 8.5 Three fillets meeting at one 3D corner
+
+When three mutually perpendicular edges are rounded with the same radius, their
+cylindrical strips need a transition at the shared corner. In the ideal symmetric
+convex case, a spherical octant provides that corner patch:
+
+![Three cylindrical fillet strips joined by an ideal spherical corner patch](assets/fillets/three_edge_corner_3d.svg)
+
+Orange shows the three edge-filleting surfaces; green shows the corner patch.
+Only the transition surfaces are shown, with neighboring planar faces omitted.
+Coordinates are local to the sphere center and divided by the radius.
+[PNG alternative](assets/fillets/three_edge_corner_3d.png).
+
+For sphere center $\mathbf c$, the positive-octant patch can be parameterized as
+
+$$
+\mathbf K(u,v)=\mathbf c+r
+\begin{bmatrix}
+\cos v\cos u\\\cos v\sin u\\\sin v
+\end{bmatrix},\qquad 0\leq u,v\leq\frac\pi2.
+$$
+
+The sphere and each quarter-cylinder share positions and normals along their
+common quarter-circle. Their principal curvatures differ: a cylinder has
+magnitudes $(1/r,0)$, while a sphere has $(1/r,1/r)$. Thus a visually smooth
+corner can still be only $G^1$ across that boundary.
+
+For a kernel example involving all twelve box edges, create a **fresh** box,
+retrieve all its edges, and pass the whole selection to one `SmApiFilletEdges`
+call with radius 2. Do not run that variant on the already filleted body above,
+and do not reuse its edge array. The volume formula in Section 8.4 then no longer
+applies because the other edges and eight corners also remove material.
+
+The spherical illustration is an ideal equal-radius construction, not a promise
+that the kernel always builds spherical corner geometry. Unequal radii, curved
+supports, concavity, and mixed continuity can require different patches. The
+current `SmApiFilletEdges` declaration explicitly limits three-edge corner
+boundary guarantees to $G^1$, even when the blend cross-section continuity is
+set to 2 or 3. Corner treatment is a separate part of the 3D algorithm.
+
+### 8.6 Reproduce the illustrations
+
+The [figure generator](assets/fillets/generate_figures.py) evaluates the explicit
+surfaces above and checks radii, contact positions, and spherical interface
+geometry. It does not call SMLib:
+
+```powershell
+uv run --no-project --with numpy --with matplotlib python mydocs/assets/fillets/generate_figures.py
+```
+
+## 9. Verification and failure localization
 
 Check contact positions, tangent-plane continuity, trim agreement, corner closure,
 and the resulting solid. A smooth tessellated highlight can hide a small gap or

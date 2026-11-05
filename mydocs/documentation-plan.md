@@ -413,3 +413,12 @@ meshing remain outside the agreed scope.
 After rebasing, review changes to the cited symbols before updating the source
 baseline. A clean merge and passing documentation checks cannot establish that
 a changed kernel still follows these workflows.
+
+### Follow-up: worked 3D fillets
+
+The fillet chapter now includes a dimensioned single-edge block example, a native
+C++ selection/fillet/validation helper, an exact rational quarter-cylinder
+construction, and an ideal three-edge spherical corner. Two additional analytic
+3D figures were generated and visually inspected; radius/contact checks passed.
+The native helper remains source-reviewed rather than compiled or executed.
+The documentation checker now also covers these SVG/PNG files and their generator.

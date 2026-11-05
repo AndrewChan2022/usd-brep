@@ -96,6 +96,15 @@ uv run --no-project --with numpy --with matplotlib python mydocs/assets/handbook
 The [generator](assets/handbook/generate_figures.py) checks analytic invariants
 for the plotted examples. The existing NURBS/fitting assets keep their own generators.
 
+The [worked 3D fillet examples](fillets-chamfers-blends.md#8-worked-3d-examples)
+add two illustrations: a block before/after rounding one edge and three fillets
+meeting at a corner patch. Their [separate generator](assets/fillets/generate_figures.py)
+checks the analytic geometry; these illustrations are not kernel execution results.
+
+```powershell
+uv run --no-project --with numpy --with matplotlib python mydocs/assets/fillets/generate_figures.py
+```
+
 Native C++ fragments in the new guides were reviewed against this checkout's
 signatures; they were **not compiled or executed for this documentation change**.
 Other code blocks are explicitly application pseudocode or source walkthroughs.

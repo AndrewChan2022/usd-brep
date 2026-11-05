@@ -74,6 +74,11 @@ def main():
     svg_files = sorted(figures.glob("*.svg"))
     if len(svg_files) != 7:
         errors.append(f"Expected seven handbook SVGs; found {len(svg_files)}")
+    fillet_figures = DOCS / "assets" / "fillets"
+    fillet_svg_files = sorted(fillet_figures.glob("*.svg"))
+    if len(fillet_svg_files) != 2:
+        errors.append(f"Expected two 3D fillet SVGs; found {len(fillet_svg_files)}")
+    svg_files.extend(fillet_svg_files)
     for path in svg_files:
         try:
             ET.parse(path)
@@ -82,13 +87,14 @@ def main():
         png = path.with_suffix(".png")
         if not png.is_file() or not png.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):
             errors.append(f"{path.name}: missing/invalid PNG alternative")
-    for path in [figures / "generate_figures.py", Path(__file__).resolve()]:
+    for path in [figures / "generate_figures.py", fillet_figures / "generate_figures.py",
+                 Path(__file__).resolve()]:
         ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     if errors:
         print("\n".join(errors))
         return 1
     print(f"Checked {len(GUIDES)} planned guides, {links} local links, "
-          f"{diagrams} Mermaid fences, seven SVG/PNG pairs and Python syntax.")
+          f"{diagrams} Mermaid fences, {len(svg_files)} SVG/PNG pairs and Python syntax.")
     print("Link checks verify target paths, not fragment anchors. "
           "Diagram/math rendering and C++ execution are separate checks.")
     return 0
