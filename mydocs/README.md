@@ -15,7 +15,7 @@ design suggestions are distinguished from observed implementation behavior.
 | Guide | What it explains |
 | --- | --- |
 | [Project overview](overview.md) | Where SMLib fits in USD BRep |
-| [Feature and architecture map](smlib.md) | Layers, capabilities, and CAD workflows |
+| [Feature and architecture map](arch.md) | Layers, capabilities, and CAD workflows |
 | [B-splines and NURBS](nurbs.md) | Basis functions, rational geometry, knots, degree/order, representation editing |
 | [Interpolation and approximation](fitting.md) | Parameterization, interpolation, least squares, curve and surface fitting |
 

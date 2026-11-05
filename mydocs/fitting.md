@@ -473,7 +473,7 @@ single-knot fit can round off a real feature.
 
 See [NL_CrvTool.cpp](../source/SMLib/src/NL_CrvTool.cpp),
 [NL_Bezier.cpp](../source/SMLib/src/NL_Bezier.cpp), and
-the [NURBS discussion in the SMLib overview](smlib.md).
+the [NURBS discussion in the SMLib overview](arch.md).
 
 ## 7. Error definitions: what has actually been fitted?
 

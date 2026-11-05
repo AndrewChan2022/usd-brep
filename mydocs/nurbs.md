@@ -15,7 +15,7 @@ captured SMLib output. Their [generator](assets/nurbs/generate_figures.py) check
 the mathematical properties shown. The C++ example below was checked against
 source signatures but has not been compiled or executed for this document.
 
-Related reading: [SMLib architecture](smlib.md) and
+Related reading: [SMLib architecture](arch.md) and
 [interpolation and approximation](fitting.md).
 
 ## 1. From Bézier curves to NURBS

@@ -12,7 +12,7 @@ The existing documents have different roles:
 | Document | Role | State |
 | --- | --- | --- |
 | [overview.md](overview.md) | Short project introduction | Existing |
-| [smlib.md](smlib.md) | Broad feature and architecture map | Linked to the subsystem handbook |
+| [arch.md](arch.md) | Broad feature and architecture map | Linked to the subsystem handbook |
 | [nurbs.md](nurbs.md) | Spline representation, evaluation, and representation editing | Existing |
 | [fitting.md](fitting.md) | Interpolation and approximation | Existing |
 | [README.md](README.md) | Handbook index and reading paths | Written |
@@ -241,7 +241,7 @@ For each guide:
    whitespace and figure reproducibility. Run executable examples where supported;
    record any unavailable build/runtime dependency precisely.
 7. Review API ownership, failure behavior, tolerance claims and degeneracies again.
-8. Link the completed guide from `smlib.md` and the planned `mydocs/README.md` index.
+8. Link the completed guide from `arch.md` and the planned `mydocs/README.md` index.
 9. Update this progress record and publish a focused commit to `chen-doc` after
    the guide passes review. Do not batch the entire handbook into one final commit.
 
