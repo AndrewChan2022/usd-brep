@@ -81,7 +81,17 @@ def main():
     svg_files.extend(fillet_svg_files)
     for path in svg_files:
         try:
-            ET.parse(path)
+            root = ET.parse(path).getroot()
+            if path.parent == fillet_figures:
+                svg_ns = "{http://www.w3.org/2000/svg}"
+                if not root.findall(f".//{svg_ns}image"):
+                    errors.append(f"{path.name}: missing rasterized surface layer")
+                if not root.findall(f".//{svg_ns}text"):
+                    errors.append(f"{path.name}: missing vector labels")
+                for group in root.findall(f".//{svg_ns}g"):
+                    if (group.get("id", "").startswith("Poly3DCollection")
+                            and group.findall(f".//{svg_ns}path")):
+                        errors.append(f"{path.name}: individual 3D face paths can produce viewer seams")
         except ET.ParseError as error:
             errors.append(f"{path.name}: {error}")
         png = path.with_suffix(".png")

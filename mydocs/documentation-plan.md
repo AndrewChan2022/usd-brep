@@ -422,3 +422,9 @@ construction, and an ideal three-edge spherical corner. Two additional analytic
 3D figures were generated and visually inspected; radius/contact checks passed.
 The native helper remains source-reviewed rather than compiled or executed.
 The documentation checker now also covers these SVG/PNG files and their generator.
+
+The 3D figure export was subsequently corrected after browser rendering exposed
+polygon-boundary patterns in the SVGs. Filled 3D collections now use 300-dpi
+raster layers; text and explicit line annotations remain vector. Before/after
+Chrome renders at 480, 960, and 1440 pixels confirmed removal of the dense seam
+pattern. The checker rejects fillet SVGs that reintroduce individual 3D face paths.

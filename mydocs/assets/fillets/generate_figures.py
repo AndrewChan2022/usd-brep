@@ -19,13 +19,22 @@ OUTPUT = Path(__file__).resolve().parent
 BLUE = "#85b7d5"
 ORANGE = "#e69032"
 GREEN = "#4caa8a"
+RENDER_DPI = 300
+CURVE_SAMPLES = 129
 matplotlib.rcParams.update({"svg.hashsalt": "smlib-fillet-3d", "svg.fonttype": "none"})
 
 
 def save(figure, name):
+    # Flatten filled 3D faces into raster layers before SVG export. Browsers
+    # must not independently rasterize thousands of adjacent polygon paths.
+    # Text, axes and explicitly drawn contact rails remain vector elements.
+    for axis in figure.axes:
+        for collection in axis.collections:
+            if isinstance(collection, Poly3DCollection):
+                collection.set_rasterized(True)
     path = OUTPUT / f"{name}.svg"
-    figure.savefig(path, bbox_inches="tight", metadata={"Date": None})
-    figure.savefig(path.with_suffix(".png"), dpi=150, bbox_inches="tight")
+    figure.savefig(path, dpi=RENDER_DPI, bbox_inches="tight", metadata={"Date": None})
+    figure.savefig(path.with_suffix(".png"), dpi=RENDER_DPI, bbox_inches="tight")
     text = path.read_text(encoding="utf-8")
     path.write_text("\n".join(line.rstrip() for line in text.splitlines()) + "\n",
                     encoding="utf-8", newline="\n")
@@ -40,7 +49,7 @@ def polygon(axis, vertices, color=BLUE):
 def box_with_one_fillet():
     length, width, height, radius = 20.0, 12.0, 8.0, 2.0
     figure = plt.figure(figsize=(13, 5.5), layout="constrained")
-    angle = np.linspace(0, np.pi / 2, 65)
+    angle = np.linspace(0, np.pi / 2, CURVE_SAMPLES)
     arc_y = radius - radius * np.cos(angle)
     arc_z = height - radius + radius * np.sin(angle)
     assert np.allclose((arc_y - radius) ** 2 + (arc_z - height + radius) ** 2, radius ** 2)
@@ -62,10 +71,11 @@ def box_with_one_fillet():
         for x in [0, length]:
             polygon(axis, [(x, y, z) for y, z in cap])
         if rounded:
-            xx, tt = np.meshgrid(np.linspace(0, length, 25), angle)
+            xx, tt = np.meshgrid([0, length], angle)
             axis.plot_surface(xx, radius - radius * np.cos(tt),
                               height - radius + radius * np.sin(tt), color=ORANGE,
-                              linewidth=0, antialiased=False, rcount=65, ccount=25)
+                              linewidth=0, antialiased=False,
+                              rcount=CURVE_SAMPLES, ccount=2)
             for y, z in [(0, 6), (2, 8)]:
                 axis.plot([0, length], [y, y], [z, z], color="#a54c12", lw=1.6, zorder=100)
             title = "After: one cylindrical fillet surface, R = 2"
@@ -86,14 +96,17 @@ def box_with_one_fillet():
 def three_edge_corner():
     figure = plt.figure(figsize=(8, 6.5), layout="constrained")
     axis = figure.add_subplot(projection="3d")
-    theta, run = np.meshgrid(np.linspace(0, np.pi / 2, 49), np.linspace(-2, 0, 20))
+    theta, run = np.meshgrid(np.linspace(0, np.pi / 2, CURVE_SAMPLES), [-2, 0])
     c, s = np.cos(theta), np.sin(theta)
     for x, y, z in [(run, c, s), (c, run, s), (c, s, run)]:
-        axis.plot_surface(x, y, z, color=ORANGE, linewidth=0, antialiased=False)
-    u, v = np.meshgrid(np.linspace(0, np.pi / 2, 49), np.linspace(0, np.pi / 2, 49))
+        axis.plot_surface(x, y, z, color=ORANGE, linewidth=0,
+                          antialiased=False, rcount=2, ccount=CURVE_SAMPLES)
+    u, v = np.meshgrid(np.linspace(0, np.pi / 2, CURVE_SAMPLES),
+                       np.linspace(0, np.pi / 2, CURVE_SAMPLES))
     x, y, z = np.cos(v) * np.cos(u), np.cos(v) * np.sin(u), np.sin(v)
     assert np.allclose(x ** 2 + y ** 2 + z ** 2, 1.0)
-    axis.plot_surface(x, y, z, color=GREEN, linewidth=0, antialiased=False, rcount=49, ccount=49)
+    axis.plot_surface(x, y, z, color=GREEN, linewidth=0,
+                      antialiased=False, rcount=CURVE_SAMPLES, ccount=CURVE_SAMPLES)
     t = np.linspace(0, np.pi / 2, 90)
     # On these interfaces, sphere and cylinder share radial unit normals.
     for x, y, z in [(0 * t, np.cos(t), np.sin(t)),

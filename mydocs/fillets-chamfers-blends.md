@@ -434,7 +434,13 @@ set to 2 or 3. Corner treatment is a separate part of the 3D algorithm.
 
 The [figure generator](assets/fillets/generate_figures.py) evaluates the explicit
 surfaces above and checks radii, contact positions, and spherical interface
-geometry. It does not call SMLib:
+geometry. It does not call SMLib.
+
+The SVGs embed the filled 3D surfaces as 300-dpi raster layers, with text, axes,
+and explicit contact rails retained as vectors. This prevents the viewer from
+independently anti-aliasing thousands of adjoining surface polygons and exposing
+a false mesh pattern. The PNG alternatives are also exported at 300 dpi.
+Regenerate both formats with:
 
 ```powershell
 uv run --no-project --with numpy --with matplotlib python mydocs/assets/fillets/generate_figures.py
