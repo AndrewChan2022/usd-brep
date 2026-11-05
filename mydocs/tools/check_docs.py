@@ -16,7 +16,7 @@ intersections queries projection-trimming sections booleans
 fillets-chamfers-blends tessellation silhouettes-visibility
 primitives-sweeps lofts-patches offsets-shells healing-stitching editing
 deformation runtime validation-diagnostics polygon-brep assemblies-attributes
-native-io usd-interchange
+native-io usd-interchange local-operations
 """.split()
 
 
@@ -79,10 +79,15 @@ def main():
     if len(fillet_svg_files) != 2:
         errors.append(f"Expected two 3D fillet SVGs; found {len(fillet_svg_files)}")
     svg_files.extend(fillet_svg_files)
+    local_figures = DOCS / "assets" / "local-operations"
+    local_svg_files = sorted(local_figures.glob("*.svg"))
+    if len(local_svg_files) != 1:
+        errors.append(f"Expected one local-operation SVG; found {len(local_svg_files)}")
+    svg_files.extend(local_svg_files)
     for path in svg_files:
         try:
             root = ET.parse(path).getroot()
-            if path.parent == fillet_figures:
+            if path.parent in [fillet_figures, local_figures]:
                 svg_ns = "{http://www.w3.org/2000/svg}"
                 if not root.findall(f".//{svg_ns}image"):
                     errors.append(f"{path.name}: missing rasterized surface layer")
@@ -98,6 +103,7 @@ def main():
         if not png.is_file() or not png.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):
             errors.append(f"{path.name}: missing/invalid PNG alternative")
     for path in [figures / "generate_figures.py", fillet_figures / "generate_figures.py",
+                 local_figures / "generate_figures.py",
                  Path(__file__).resolve()]:
         ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     if errors:

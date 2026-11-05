@@ -24,6 +24,10 @@ below preserves the agreed scope; the delivery record at the end states the
 reviewed paths, example validation, limitations, and commits. Source review is
 not a full runtime audit of every branch of every subsystem.
 
+The later [local-operations chapter](local-operations.md) adds explicit LOP
+coverage, bringing the handbook to 27 subsystem guides. The original 26-guide
+roadmap and delivery ledger below retain their historical scope.
+
 Interpretation of the requested names: `bool` means solid BRep booleans, `iset`
 means intersections, `eval` means geometric evaluation, `section` means planar
 cross-sections and their relationship to cutting, and `tess` means tessellation.
@@ -428,3 +432,27 @@ polygon-boundary patterns in the SVGs. Filled 3D collections now use 300-dpi
 raster layers; text and explicit line annotations remain vector. Before/after
 Chrome renders at 480, 960, and 1440 pixels confirmed removal of the dense seam
 pattern. The checker rejects fillet SVGs that reintroduce individual 3D face paths.
+
+### Follow-up: explicit local operations (LOP)
+
+Added [local-operations.md](local-operations.md) as the 27th subsystem guide and
+linked it from the handbook, editing, and offset chapters. It traces
+`SmBrep::LocalOperation`, `SmLocalOperationGeometryCreation`, and the extended
+offset executive through face construction, UV/edge correspondence, support
+extension, intersection, stitching, and whole-face-set replacement.
+
+The chapter distinguishes mathematical local editing from this implementation's
+limits: raw surface adoption/mutation, parameter compatibility, suppressed edge
+repair failures, stitching versus full merge, and application validation.
+Worked constructions cover raising a block top, tilting its top, and enlarging
+a through-hole. A new three-panel 3D figure shows the first two edits against
+the original body, with independent plane/corner/volume assertions.
+
+Validation: documentation structure and assets passed for all 27 guides;
+58 Mermaid diagrams parsed and 451 LaTeX expressions rendered without errors.
+Both new Mermaid diagrams and the new SVG were rendered in Chrome and visually
+inspected. The 3D SVG was reviewed at 960 pixels, with a second 1440-pixel render;
+filled surfaces use raster layers and contain no individual 3D polygon paths.
+The checker now includes the new SVG/PNG pair and generator. Native call fragments
+remain source-reviewed, not compiled or executed; the figure is not evidence of
+a successful SMLib local-operation run. No kernel code was changed.

@@ -4,6 +4,11 @@ Source baseline: upstream `3fd5b9548d19aa8c12c29bc9637a96d42a06f8a5`.
 This guide traces representative public calls and explains offset geometry.
 Workflow examples are not executed results or a universal thickness guarantee.
 
+The same executive also implements [local operations](local-operations.md):
+`SmLocalOperationGeometryCreation` supplies selected replacement surfaces instead
+of constructing a uniform normal offset. That entry point has distinct input,
+ownership, parameterization, and validation requirements.
+
 ## 1. Offset does not mean translation
 
 A surface offset displaces each point along its local normal:

@@ -23,6 +23,12 @@ changes. Adjacent faces, trims, caches and selected entity identities may all be
 affected. A global transform can preserve topology while a small edge edit can
 replace many incidence objects.
 
+The kernel also has an explicit `SmBrep::LocalOperation` for replacing selected
+face supports and reconstructing their boundaries through `SmOffsetExecutive`.
+See [local operations](local-operations.md) for its actual call path, UV mapping
+assumptions, ownership limits, and dimensioned 3D face-edit examples. It rebuilds
+the receiving body's face set; it is not a pointer-preserving surface setter.
+
 ## 2. Mathematical distinctions
 
 A rigid transform is $\mathbf x'=R\mathbf x+\mathbf t$ with $R^TR=I$.

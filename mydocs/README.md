@@ -2,7 +2,7 @@
 
 This handbook explains the geometry, algorithms, implementation paths, and C++
 integration concerns behind SMLib. Start with the overview, then follow the
-foundation chapters before studying modeling operations. The 26 subsystem
+foundation chapters before studying modeling operations. The 27 subsystem
 chapters supplement the existing NURBS and fitting guides.
 
 The source baseline for the new chapters is upstream
@@ -57,6 +57,7 @@ design suggestions are distinguished from observed implementation behavior.
 | [Offsets and shells](offsets-shells.md) | Normal offsets, curvature limits, joins, openings and ownership |
 | [Healing and stitching](healing-stitching.md) | Gap measurement, staged repair, sewing and independent validation |
 | [Editing and feature removal](editing.md) | Geometry/topology changes, reconstruction, selections and application undo |
+| [Local operations (LOP)](local-operations.md) | Selected support replacement, UV compatibility, edge reconstruction, face moves and radius changes |
 | [Deformation](deformation.md) | Volume maps, bending, twisting, Jacobians and consistency |
 
 ## Runtime and interchange
@@ -77,6 +78,7 @@ design suggestions are distinguished from observed implementation behavior.
 - **Build a free-form cover:** NURBS → fitting → lofts/patches → projection/trimming → offsets/shells.
 - **Measure clearance:** evaluation → solvers → queries; distinguish boundary distance from solid overlap.
 - **Integrate into a C++ CAD application:** runtime → assemblies/attributes → editing → validation → tessellation.
+- **Implement a direct face edit:** topology → projection/trimming → local operations → validation → editing.
 
 Qt UI, sketch constraints, parametric regeneration, persistent naming, and an
 application document/undo model remain separate application architecture topics.
@@ -103,6 +105,15 @@ checks the analytic geometry; these illustrations are not kernel execution resul
 
 ```powershell
 uv run --no-project --with numpy --with matplotlib python mydocs/assets/fillets/generate_figures.py
+```
+
+The [local-operation examples](local-operations.md#6-worked-3d-constructions)
+add a three-panel illustration of a block, a raised top, and a tilted top.
+Their [generator](assets/local-operations/generate_figures.py) checks planar
+geometry and volumes; these are analytic references rather than kernel results.
+
+```powershell
+uv run --no-project --with numpy --with matplotlib python mydocs/assets/local-operations/generate_figures.py
 ```
 
 Native C++ fragments in the new guides were reviewed against this checkout's
